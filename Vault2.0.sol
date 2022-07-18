@@ -31,5 +31,16 @@ contract VaultContract {
         vault.amount += amount;
     }
 
-    function distribute()
+    function distribute(uint256 vaultID) public {
+        Vault storage vault = vaults[vaultID];
+        uint256 amountPerUser = vault.amount / vault.user.length;
+        if( vault.amount != 0 ){
+            for(uint256 i; i < vault.user.length; i++){
+                vault.amount -= amountPerUser;
+                balance[vault.user[i]] = amountPerUser;
+            }
+        } else{
+            revert("No fund available");
+        }
+    }
 }
